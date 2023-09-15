@@ -1,0 +1,5 @@
+package-lock.json
+.idea
+node_modules
+mail-tukurukun-backend.iml
+docker-compose.yml
