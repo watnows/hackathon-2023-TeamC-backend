@@ -1,12 +1,21 @@
-FROM node:18
-LABEL author="TAKAYAMAN2180"
+FROM node:18 AS builder
 
 WORKDIR /app
 
-COPY . /app/
-
-RUN apt-get update
-
+COPY package.json ./
 RUN npm install
 
-CMD ["npm", "start"]
+COPY . .
+RUN npm run build
+
+FROM node:18
+
+WORKDIR /app
+
+COPY --from=builder /app/dist ./dist
+COPY package.json ./
+RUN npm install --production
+
+EXPOSE 3000
+
+CMD ["node", "dist/index.js"]
