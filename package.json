@@ -1,0 +1,24 @@
+{
+  "name": "mail-tukurukun-backend",
+  "version": "1.0.0",
+  "description": "it is the backend app for mail-tukurukun",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TAKAYAMAN2180",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "openai": "^4.7.0",
+    "swagger-jsdoc": "^6.2.8"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.6.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}
