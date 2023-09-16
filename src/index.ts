@@ -1,4 +1,5 @@
 import express from 'express'
+import {ask} from "./chatgpt";
 
 
 const app: express.Express = express()
@@ -31,5 +32,6 @@ const users: User[] = [
 
 //一覧取得
 app.get('/users', (req: express.Request, res: express.Response) => {
+    ask("こんにちは");
     res.send(JSON.stringify(users))
 })
