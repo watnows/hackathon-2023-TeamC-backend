@@ -24,7 +24,7 @@ app.listen(3000, () => {
     console.log("Start on port 3000.");
 })
 
-// 日程調節
+// 1.日程調節
 type AdjustScheduleRequestType = {
     new_date: [{
         start_date: UnixTimestamp,
@@ -62,9 +62,9 @@ app.post('/api/adjust-schedule', async (req: express.Request, res: express.Respo
         new_date: data.new_date,
         past_date: data.past_date,
         company: data.company,
-        belonging: data.belonging,
         contact_person_name: data.contact_person_name,
         name: data.name,
+        belonging: data.belonging,
         reason: data.reason
     }
 
@@ -93,7 +93,7 @@ app.post('/api/adjust-schedule', async (req: express.Request, res: express.Respo
     res.send(JSON.stringify({title: "日程調節のお願い", content: result}));
 })
 
-// お詫び
+// 2.お詫び
 type ApologyRequestType = {
     company: string,
     belonging: string,
@@ -131,7 +131,7 @@ app.post('/api/apology', async (req: express.Request, res: express.Response) => 
     res.send(JSON.stringify({title: requestBody.what + "に関するお詫び", content: result}));
 })
 
-// 内定辞退
+// 3.内定辞退
 type RefusalRequestType = {
     company: string,
     contact_person_name: string,
@@ -167,7 +167,7 @@ app.post('/api/refusal', async (req: express.Request, res: express.Response) => 
     res.send(JSON.stringify({title: "内定辞退のご連絡", content: result}));
 })
 
-// 内定受託
+// 4. 内定承諾
 type ReceiveOfferRequestType = {
     company: string,
     contact_person_name: string,
@@ -199,7 +199,7 @@ app.post("/api/receive-offer", async (req: express.Request, res: express.Respons
     res.send(JSON.stringify({title: "内定のお礼", content: result}));
 })
 
-// お礼
+// 5.お礼
 type ThankRequestType = {
     company: string,
     contact_person_name: string,
