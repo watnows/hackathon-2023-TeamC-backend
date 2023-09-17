@@ -24,7 +24,7 @@ app.listen(3000, () => {
     console.log("Start on port 3000.");
 })
 
-
+// 日程調節
 type AdjustScheduleRequestType = {
     new_date: [{
         start_date: UnixTimestamp,
@@ -91,7 +91,7 @@ app.post('/api/adjust-schedule', async (req: express.Request, res: express.Respo
     res.send(JSON.stringify({title: "日程調節のお願い", content: result}));
 })
 
-
+// お詫び
 type ApologyRequestType = {
     company: string,
     contact_person_name: string,
@@ -127,6 +127,7 @@ app.post('/api/apology', async (req: express.Request, res: express.Response) => 
     res.send(JSON.stringify({title: requestBody.what + "に関するお詫び", content: result}));
 })
 
+// 内定辞退
 type RefusalRequestType = {
     company: string,
     contact_person_name: string,
@@ -158,4 +159,65 @@ app.post('/api/refusal', async (req: express.Request, res: express.Response) => 
 
     const result = await ask(question, requestBody.name, requestBody.company, requestBody.contact_person_name);
     res.send(JSON.stringify({title: "内定辞退のご連絡", content: result}));
+})
+
+// 内定受託
+type ReceiveOfferRequestType = {
+    company: string,
+    contact_person_name: string,
+    name: string,
+}
+app.post("/api/receive_offer", async (req: express.Request, res: express.Response) => {
+    const data = req.body;
+    // 型チェック
+    if (!data.company || !data.name || !data.contact_person_name) {
+        console.log("Request Body is the bellow\n*********\n" + req.body);
+        res.status(400).send({message: "Bad Request　パラメータが足りません。"});
+        return;
+    } else if (typeof data.company !== "string" || typeof data.name !== "string" || typeof data.contact_person_name !== "string") {
+        res.status(400).send({message: "Bad Request　パラメータの型が違います。"});
+        return;
+    }
+
+    const requestBody: ReceiveOfferRequestType = {
+        company: data.company,
+        contact_person_name: data.contact_person_name,
+        name: data.name
+    }
+
+    const question = "内定を受ける旨と内定を渡したことに対するお礼の旨を記載したメールの本文を作成してください。";
+    const result = await ask(question, requestBody.name, requestBody.company, requestBody.contact_person_name);
+
+    res.send(JSON.stringify({title: "内定のお礼", content: result}));
+})
+
+// お礼
+type ThankRequestType = {
+    company: string,
+    contact_person_name: string,
+    why: string,
+    name: string
+}
+app.post("/api/thank", async (req: express.Request, res: express.Response) => {
+    const data = req.body;
+    if (!data.company || !data.contact_person_name || !data.why || !data.name) {
+        console.log("Request Body is the bellow\n*********\n" + req.body);
+        res.status(400).send({message: "Bad Request　パラメータが足りません。"});
+        return;
+    } else if (typeof data.company !== "string" || typeof data.contact_person_name !== "string" || typeof data.why !== "string" || typeof data.name !== "string") {
+        res.status(400).send({message: "Bad Request　パラメータの型が違います。"});
+        return;
+    }
+
+    const requestBody: ThankRequestType = {
+        company: data.company,
+        contact_person_name: data.contact_person_name,
+        why: data.why,
+        name: data.name
+    }
+
+    const question = requestBody.why + "のため、お礼のメールの本文を作成してください。";
+
+    const result = await ask(question, requestBody.name, requestBody.company, requestBody.contact_person_name);
+    res.send(JSON.stringify({title: requestBody.why + "に関するお礼", content: result}));
 })
