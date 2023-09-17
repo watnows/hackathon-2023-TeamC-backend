@@ -28,7 +28,7 @@ function translateByDeepl(content: string): string {
     return text_ja
 }
 
-export async function ask(content: string, name?: string, targetCompany?: string, contactPersonName?: string) {
+export async function ask(content: string, name: string, targetCompany: string, belonging: string, contactPersonName: string) {
     // let translatedTxt = translateByDeepl(content);
 
     const response = await openai.chat.completions.create({
@@ -46,7 +46,7 @@ export async function ask(content: string, name?: string, targetCompany?: string
                 content: "Please write your japanese polite e-mail in Japanese with no spaces."
             }, {
                 role: "system",
-                content: "Your name is " + name + ".　You send an email to " + contactPersonName + " belonging in " + targetCompany + "."
+                content: "Your name is " + name + " and you belong to " + belonging + ".　You send an email to " + contactPersonName + " belonging in " + targetCompany + "."
             }
         ]
     });
