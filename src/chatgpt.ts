@@ -1,7 +1,5 @@
 import OpenAI from "openai";
-import dotenv from "dotenv";
-import translate, {DeeplLanguages} from 'deepl';
-
+import translate from 'deepl';
 
 require('dotenv').config();
 
@@ -30,12 +28,12 @@ function translateByDeepl(content: string): string {
     return text_ja
 }
 
-export async function ask(content: string, name?: string, targetCompany?: string) {
-    let translatedTxt = translateByDeepl(content);
+export async function ask(content: string, name?: string, targetCompany?: string, contactPersonName?: string) {
+    // let translatedTxt = translateByDeepl(content);
 
     const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
-        temperature: 1,
+        top_p: 0.7,
         messages: [
             {
                 role: "user",
@@ -48,17 +46,25 @@ export async function ask(content: string, name?: string, targetCompany?: string
                 content: "Please write your japanese polite e-mail in Japanese with no spaces."
             }, {
                 role: "system",
-                content: "Your name is " + name + ".　The company you are sending the email to is " + targetCompany + "."
-            }, {
-                role: "system",
-                content: "「敬具」と「拝啓」は書く必要がありません。."
+                content: "Your name is " + name + ".　You send an email to " + contactPersonName + " belonging in " + targetCompany + "."
             }
         ]
     });
 
     const answer = response.choices[0].message?.content;
-    console.log(answer);
+    let adjustedAnswer = '';
+
+    if (answer) {
+        adjustedAnswer = adjustAnswer(answer);
+    }
+
+    console.log(adjustedAnswer);
+    return adjustedAnswer;
 }
 
-const question = "インターンシップのお礼のメールを作ってください";
-ask(question, "高山隼", "Watnow");
+function adjustAnswer(str: string): string {
+    let newStr = str.replace(/拝啓(、|　| )*/g, '');
+    newStr = newStr.replace(/敬具(、|　| )*/g, '');
+    newStr = newStr.replace(/\n{2}/g, '\n');
+    return newStr;
+}

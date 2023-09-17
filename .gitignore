@@ -3,3 +3,5 @@ node_modules
 mail-tukurukun-backend.iml
 .idea
 .env
+src/test.ts
+dist
